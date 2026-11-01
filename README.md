@@ -275,7 +275,7 @@ TrazaCafeHuila/
 ├── docs/
 │   ├── adr/                            ADR-001 a ADR-006
 │   ├── arquitectura/                   diagramas Mermaid + img/
-│   └── entrega/                        documento técnico (Word)
+│   └── entrega/                        documento técnico (Word) y presentación (PowerPoint)
 ├── docker-compose.yml
 ├── Directory.Build.props · Directory.Packages.props
 └── TrazaCafeHuila.slnx
@@ -295,6 +295,7 @@ Limitaciones actuales: datos sintéticos, sin autenticación, una sola instancia
 ## 15. Documentación
 
 - **Documento técnico** (APA 7, con membrete institucional): [`docs/entrega/TrazaCafe_Huila_Documento_Tecnico_Membrete.docx`](docs/entrega/TrazaCafe_Huila_Documento_Tecnico_Membrete.docx)
+- **Presentación final** (13 diapositivas con notas del orador): [`docs/entrega/TrazaCafe_Huila_Presentacion_Final.pptx`](docs/entrega/TrazaCafe_Huila_Presentacion_Final.pptx)
 - **Decisiones de arquitectura:** [`docs/adr/`](docs/adr)
 - **Diagramas:** [`docs/arquitectura/diagramas.md`](docs/arquitectura/diagramas.md) · [`docs/arquitectura/img/`](docs/arquitectura/img)
 
