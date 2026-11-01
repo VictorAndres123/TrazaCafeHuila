@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <!--
+    Worker orientado a eventos. Se aloja en un host web mínimo solo para exponer /health/live y /health/ready.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\TrazaCafe.Cumplimiento.Infrastructure\TrazaCafe.Cumplimiento.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\geodata\areas_deforestadas.geojson"
+          Link="geodata\areas_deforestadas.geojson"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

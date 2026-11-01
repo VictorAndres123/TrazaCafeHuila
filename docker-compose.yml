@@ -1,0 +1,76 @@
+# TrazaCafé Huila — entorno local completo:  docker compose up --build
+# Credenciales SOLO para desarrollo local.
+name: trazacafe
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: trazacafe
+      POSTGRES_PASSWORD: trazacafe_dev
+      POSTGRES_DB: postgres
+    ports:
+      - "55432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trazacafe -d cumplimiento_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: trazacafe
+      RABBITMQ_DEFAULT_PASS: trazacafe_dev
+    ports:
+      - "5672:5672"
+      - "15672:15672"   # consola de administración: http://localhost:15672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  acopio-api:
+    build:
+      context: .
+      dockerfile: src/Acopio/TrazaCafe.Acopio.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Acopio: "Host=postgres;Port=5432;Database=acopio_db;Username=trazacafe;Password=trazacafe_dev"
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Usuario: trazacafe
+      RabbitMq__Clave: trazacafe_dev
+    ports:
+      - "5080:8080"     # Swagger: http://localhost:5080/swagger
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  cumplimiento-worker:
+    build:
+      context: .
+      dockerfile: src/Cumplimiento/TrazaCafe.Cumplimiento.Worker/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Cumplimiento: "Host=postgres;Port=5432;Database=cumplimiento_db;Username=trazacafe;Password=trazacafe_dev"
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Usuario: trazacafe
+      RabbitMq__Clave: trazacafe_dev
+    ports:
+      - "5081:8080"     # salud: http://localhost:5081/health/ready
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:

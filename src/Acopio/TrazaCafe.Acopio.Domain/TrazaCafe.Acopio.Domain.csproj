@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Núcleo del hexágono: sin dependencias de infraestructura ni de frameworks. -->
+</Project>

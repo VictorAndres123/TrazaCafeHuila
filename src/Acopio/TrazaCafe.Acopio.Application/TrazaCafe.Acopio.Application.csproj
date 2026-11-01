@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Casos de uso y puertos. Depende solo del dominio y del lenguaje publicado. -->
+  <ItemGroup>
+    <ProjectReference Include="..\TrazaCafe.Acopio.Domain\TrazaCafe.Acopio.Domain.csproj" />
+    <ProjectReference Include="..\..\TrazaCafe.Contracts\TrazaCafe.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="TrazaCafe.Acopio.Application.Tests" />
+  </ItemGroup>
+</Project>

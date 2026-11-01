@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\TrazaCafe.Cumplimiento.Domain\TrazaCafe.Cumplimiento.Domain.csproj" />
+    <ProjectReference Include="..\..\TrazaCafe.Contracts\TrazaCafe.Contracts.csproj" />
+  </ItemGroup>
+</Project>

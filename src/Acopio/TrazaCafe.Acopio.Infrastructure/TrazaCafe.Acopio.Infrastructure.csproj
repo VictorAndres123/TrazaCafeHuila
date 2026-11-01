@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Adaptadores de salida (EF Core, Npgsql, outbox) y de entrada por mensajería (RabbitMQ). -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TrazaCafe.Acopio.Application\TrazaCafe.Acopio.Application.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\TrazaCafe.BuildingBlocks\TrazaCafe.BuildingBlocks.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,42 @@
+{
+  "type": "FeatureCollection",
+  "name": "areas_deforestadas_sinteticas",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEF-2023-001",
+        "fecha_perdida": "2023-05-10",
+        "fuente": "Dato sintético de prueba (simula una alerta de pérdida de cobertura forestal)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-75.895, 1.805], [-75.885, 1.805], [-75.885, 1.815], [-75.895, 1.815], [-75.895, 1.805]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEF-2019-001",
+        "fecha_perdida": "2019-08-01",
+        "fuente": "Dato sintético de prueba (pérdida ANTERIOR a la fecha de corte del 31-12-2020)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-75.895, 2.385], [-75.880, 2.385], [-75.880, 2.395], [-75.895, 2.395], [-75.895, 2.385]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEF-2022-002",
+        "fecha_perdida": "2022-11-20",
+        "fuente": "Dato sintético de prueba (no intersecta ninguna finca)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-76.000, 2.000], [-75.990, 2.000], [-75.990, 2.010], [-76.000, 2.010], [-76.000, 2.000]]]
+      }
+    }
+  ]
+}

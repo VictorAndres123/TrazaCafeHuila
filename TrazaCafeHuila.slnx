@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TrazaCafe.Contracts/TrazaCafe.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/TrazaCafe.BuildingBlocks/TrazaCafe.BuildingBlocks.csproj" />
+  </Folder>
+  <Folder Name="/src/Acopio/">
+    <Project Path="src/Acopio/TrazaCafe.Acopio.Domain/TrazaCafe.Acopio.Domain.csproj" />
+    <Project Path="src/Acopio/TrazaCafe.Acopio.Application/TrazaCafe.Acopio.Application.csproj" />
+    <Project Path="src/Acopio/TrazaCafe.Acopio.Infrastructure/TrazaCafe.Acopio.Infrastructure.csproj" />
+    <Project Path="src/Acopio/TrazaCafe.Acopio.Api/TrazaCafe.Acopio.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Cumplimiento/">
+    <Project Path="src/Cumplimiento/TrazaCafe.Cumplimiento.Domain/TrazaCafe.Cumplimiento.Domain.csproj" />
+    <Project Path="src/Cumplimiento/TrazaCafe.Cumplimiento.Application/TrazaCafe.Cumplimiento.Application.csproj" />
+    <Project Path="src/Cumplimiento/TrazaCafe.Cumplimiento.Infrastructure/TrazaCafe.Cumplimiento.Infrastructure.csproj" />
+    <Project Path="src/Cumplimiento/TrazaCafe.Cumplimiento.Worker/TrazaCafe.Cumplimiento.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TrazaCafe.Acopio.Domain.Tests/TrazaCafe.Acopio.Domain.Tests.csproj" />
+    <Project Path="tests/TrazaCafe.Acopio.Application.Tests/TrazaCafe.Acopio.Application.Tests.csproj" />
+    <Project Path="tests/TrazaCafe.Cumplimiento.Tests/TrazaCafe.Cumplimiento.Tests.csproj" />
+  </Folder>
+</Solution>

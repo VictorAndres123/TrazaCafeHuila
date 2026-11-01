@@ -1,0 +1,106 @@
+### TrazaCafé Huila — recorrido de la demo (VS Code REST Client o Visual Studio / Rider)
+### Requiere: docker compose up --build   (API en http://localhost:5080)
+
+@base = http://localhost:5080
+@fincaEsperanza = f1000000-0000-4000-8000-000000000001
+@fincaMirador   = f1000000-0000-4000-8000-000000000002
+@fincaBuenavista = f1000000-0000-4000-8000-000000000003
+@fincaNaranjos  = f1000000-0000-4000-8000-000000000004
+@fincaRecuerdo  = f1000000-0000-4000-8000-000000000006
+
+### 0. Salud (PostgreSQL + RabbitMQ)
+GET {{base}}/health/ready
+
+### 1. Fincas sintéticas cargadas por seed
+GET {{base}}/api/fincas
+
+### 2. RF1 · Sincronizar entregas registradas sin conexión → 200 {creadas: 6}
+POST {{base}}/api/entregas/sync
+Content-Type: application/json
+
+{
+  "puntoAcopio": "Acopio Pitalito",
+  "entregas": [
+    { "entregaId": "e1000000-0000-4000-8000-000000000001", "fincaId": "{{fincaEsperanza}}",  "kilos": 125.5, "fechaEntrega": "2026-10-20" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000002", "fincaId": "{{fincaNaranjos}}",   "kilos": 80,    "fechaEntrega": "2026-10-21" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000003", "fincaId": "{{fincaEsperanza}}",  "kilos": 60.25, "fechaEntrega": "2026-10-22" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000004", "fincaId": "{{fincaMirador}}",    "kilos": 95,    "fechaEntrega": "2026-10-22" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000005", "fincaId": "{{fincaBuenavista}}", "kilos": 110,   "fechaEntrega": "2026-10-23" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000006", "fincaId": "{{fincaRecuerdo}}",   "kilos": 40,    "fechaEntrega": "2026-10-23" }
+  ]
+}
+
+### 3. QA1 · Reenviar EXACTAMENTE lo mismo → 200 {creadas: 0, duplicadas: 6} (no duplica kilos)
+POST {{base}}/api/entregas/sync
+Content-Type: application/json
+
+{
+  "puntoAcopio": "Acopio Pitalito",
+  "entregas": [
+    { "entregaId": "e1000000-0000-4000-8000-000000000001", "fincaId": "{{fincaEsperanza}}",  "kilos": 125.5, "fechaEntrega": "2026-10-20" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000002", "fincaId": "{{fincaNaranjos}}",   "kilos": 80,    "fechaEntrega": "2026-10-21" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000003", "fincaId": "{{fincaEsperanza}}",  "kilos": 60.25, "fechaEntrega": "2026-10-22" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000004", "fincaId": "{{fincaMirador}}",    "kilos": 95,    "fechaEntrega": "2026-10-22" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000005", "fincaId": "{{fincaBuenavista}}", "kilos": 110,   "fechaEntrega": "2026-10-23" },
+    { "entregaId": "e1000000-0000-4000-8000-000000000006", "fincaId": "{{fincaRecuerdo}}",   "kilos": 40,    "fechaEntrega": "2026-10-23" }
+  ]
+}
+
+### 4. QA1 · Mismo entregaId con kilos alterados (125.5 → 1255) → 409 y no se persiste nada
+POST {{base}}/api/entregas/sync
+Content-Type: application/json
+
+{
+  "puntoAcopio": "Acopio Pitalito",
+  "entregas": [
+    { "entregaId": "e1000000-0000-4000-8000-000000000001", "fincaId": "{{fincaEsperanza}}", "kilos": 1255, "fechaEntrega": "2026-10-20" }
+  ]
+}
+
+### 5. RF2 · Lote A (La Esperanza + Los Naranjos) → 202, luego Declarable
+# @name loteA
+POST {{base}}/api/lotes
+Content-Type: application/json
+
+{ "entregaIds": ["e1000000-0000-4000-8000-000000000001", "e1000000-0000-4000-8000-000000000002"] }
+
+### 6. RF2 · Lote B (La Esperanza + El Mirador, con pérdida de bosque en 2023) → 202, luego Bloqueado
+# @name loteB
+POST {{base}}/api/lotes
+Content-Type: application/json
+
+{ "entregaIds": ["e1000000-0000-4000-8000-000000000003", "e1000000-0000-4000-8000-000000000004"] }
+
+### 7. RF2 · Lote C (Buenavista: pérdida en 2019, ANTES del corte) → 202, luego Declarable
+# @name loteC
+POST {{base}}/api/lotes
+Content-Type: application/json
+
+{ "entregaIds": ["e1000000-0000-4000-8000-000000000005"] }
+
+### 8. I2 · Reusar una entrega ya asignada → 422
+POST {{base}}/api/lotes
+Content-Type: application/json
+
+{ "entregaIds": ["e1000000-0000-4000-8000-000000000001"] }
+
+### 9. Consentimiento · Finca El Recuerdo sin autorización de datos → 422
+POST {{base}}/api/lotes
+Content-Type: application/json
+
+{ "entregaIds": ["e1000000-0000-4000-8000-000000000006"] }
+
+### 10. Estado de todos los lotes (repetir tras 1–3 s para ver la consistencia eventual)
+GET {{base}}/api/lotes
+
+### 11. RF4 · Genealogía del lote A (insumo de la declaración de diligencia debida)
+GET {{base}}/api/lotes/{{loteA.response.body.$.loteId}}/genealogia
+
+### 12. RF4 · Genealogía del lote B (Bloqueado: ver detalleVerificacion de El Mirador)
+GET {{base}}/api/lotes/{{loteB.response.body.$.loteId}}/genealogia
+
+### 13. Genealogía del lote C
+GET {{base}}/api/lotes/{{loteC.response.body.$.loteId}}/genealogia
+
+### 14. Salud del worker de Cumplimiento (incluye capa geoespacial)
+GET http://localhost:5081/health/ready

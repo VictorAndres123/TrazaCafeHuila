@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Núcleo del contexto de Cumplimiento: la regla regulatoria vive aquí, no en el adaptador geoespacial. -->
+</Project>
